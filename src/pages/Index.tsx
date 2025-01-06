@@ -10,12 +10,6 @@ const Index = () => {
   const { toast } = useToast();
 
   // Simulated data - in a real app, this would come from an API
-  const btcData = {
-    currentPrice: 43250,
-    priceChange24h: -2.5,
-    priceChange7d: 5.8,
-  };
-
   const sentimentData = {
     fearGreedIndex: 65,
     sentiment: "Greed" as const,
@@ -36,12 +30,14 @@ const Index = () => {
   }, [notificationsEnabled, toast]);
 
   return (
-    <div className="min-h-screen bg-background p-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8">
       <div className="max-w-6xl mx-auto space-y-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold font-mono">BTC DCA Dashboard</h1>
+          <h1 className="text-3xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">
+            BTC DCA Dashboard
+          </h1>
           <div className="flex items-center gap-2">
-            <span className="text-sm">Notifications</span>
+            <span className="text-sm text-gray-400">Notifications</span>
             <Switch
               checked={notificationsEnabled}
               onCheckedChange={setNotificationsEnabled}
@@ -50,13 +46,13 @@ const Index = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <BTCPrice {...btcData} />
+          <BTCPrice />
           <MarketSentiment {...sentimentData} />
           <DCARecommendation {...dcaRecommendation} />
         </div>
 
-        <div className="text-center text-sm text-muted-foreground">
-          Data updates every 5 minutes. Last updated: {new Date().toLocaleTimeString()}
+        <div className="text-center text-sm text-gray-500">
+          Data updates every minute. Last updated: {new Date().toLocaleTimeString()}
         </div>
       </div>
     </div>
