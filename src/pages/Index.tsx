@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { BTCPrice } from "@/components/BTCPrice";
 import { MarketSentiment } from "@/components/MarketSentiment";
 import { DCARecommendation } from "@/components/DCARecommendation";
+import { BTCInsights } from "@/components/BTCInsights";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 
@@ -49,6 +50,10 @@ const Index = () => {
           <BTCPrice />
           <MarketSentiment {...sentimentData} />
           <DCARecommendation {...dcaRecommendation} />
+        </div>
+
+        <div className="w-full">
+          <BTCInsights />
         </div>
 
         <div className="text-center text-sm text-gray-500">

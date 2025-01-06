@@ -14,10 +14,15 @@ const fetchBTCData = async () => {
     "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true&include_7d_change=true"
   );
   return {
-    currentPrice: response.data.bitcoin.usd,
-    priceChange24h: response.data.bitcoin.usd_24h_change,
-    priceChange7d: response.data.bitcoin.usd_7d_change,
+    currentPrice: response.data.bitcoin.usd || 0,
+    priceChange24h: response.data.bitcoin.usd_24h_change || 0,
+    priceChange7d: response.data.bitcoin.usd_7d_change || 0,
   };
+};
+
+const formatPercentage = (value: number): string => {
+  if (typeof value !== 'number' || isNaN(value)) return '0.00';
+  return Math.abs(value).toFixed(2);
 };
 
 export const BTCPrice = () => {
@@ -37,6 +42,10 @@ export const BTCPrice = () => {
     );
   }
 
+  const price = data?.currentPrice || 0;
+  const change24h = data?.priceChange24h || 0;
+  const change7d = data?.priceChange7d || 0;
+
   return (
     <Card className="w-full bg-gradient-to-br from-gray-900 to-gray-800 border-none relative overflow-hidden
                     shadow-[20px_20px_60px_#1a1a1a,-20px_-20px_60px_#262626]
@@ -49,24 +58,24 @@ export const BTCPrice = () => {
       <CardContent className="relative z-10">
         <div className="space-y-4">
           <div className="text-5xl font-mono text-white font-bold tracking-tight">
-            ${data?.currentPrice.toLocaleString()}
+            ${price.toLocaleString()}
           </div>
           <div className="flex gap-4 justify-center">
-            <div className={`flex items-center ${data?.priceChange24h >= 0 ? "text-success" : "text-warning"}`}>
-              {data?.priceChange24h >= 0 ? (
+            <div className={`flex items-center ${change24h >= 0 ? "text-green-400" : "text-red-400"}`}>
+              {change24h >= 0 ? (
                 <ArrowUp className="w-4 h-4 mr-1" />
               ) : (
                 <ArrowDown className="w-4 h-4 mr-1" />
               )}
-              <span className="font-mono">{Math.abs(data?.priceChange24h).toFixed(2)}% (24h)</span>
+              <span className="font-mono">{formatPercentage(change24h)}% (24h)</span>
             </div>
-            <div className={`flex items-center ${data?.priceChange7d >= 0 ? "text-success" : "text-warning"}`}>
-              {data?.priceChange7d >= 0 ? (
+            <div className={`flex items-center ${change7d >= 0 ? "text-green-400" : "text-red-400"}`}>
+              {change7d >= 0 ? (
                 <ArrowUp className="w-4 h-4 mr-1" />
               ) : (
                 <ArrowDown className="w-4 h-4 mr-1" />
               )}
-              <span className="font-mono">{Math.abs(data?.priceChange7d).toFixed(2)}% (7d)</span>
+              <span className="font-mono">{formatPercentage(change7d)}% (7d)</span>
             </div>
           </div>
         </div>
