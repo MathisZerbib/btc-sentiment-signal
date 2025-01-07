@@ -1,40 +1,21 @@
-# Welcome to your Lovable project
+# Welcome to the Mathis Zerbib Project
 
-## Project info
+## Project Info  
+**URL**: [https://btc-sentiment-signal.vercel.app/](https://btc-sentiment-signal.vercel.app/)  
+This project analyzes and visualizes Bitcoin sentiment signals in real-time, using machine learning models and live market data.
 
-**URL**: https://lovable.dev/projects/b4ba0cd4-5594-44bf-a1c9-42bca18a8958
+## How to Edit This Code  
 
-## How can I edit this code?
+1. **Using Mathis Zerbib**: Visit the [Mathis Zerbib Project](https://btc-sentiment-signal.vercel.app/) and start experimenting. Changes are auto-committed.
+2. **Using Your IDE**:  
+   ```sh
+   git clone <YOUR_GIT_URL>
+   cd <YOUR_PROJECT_NAME>
+   npm install
+   npm run dev
+    ```
 
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/b4ba0cd4-5594-44bf-a1c9-42bca18a8958) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+3. **Using GitHub**: Fork this repository and make changes.
 
 **Edit a file directly in GitHub**
 
@@ -59,11 +40,4 @@ This project is built with .
 - React
 - shadcn-ui
 - Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/b4ba0cd4-5594-44bf-a1c9-42bca18a8958) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+- Vercel

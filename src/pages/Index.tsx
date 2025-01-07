@@ -9,6 +9,7 @@ import { PriceAlertModal } from "@/components/PriceAlertModal";
 import { useBinanceWebSocket } from "@/hooks/useBinanceWebSocket";
 import axios from "axios";
 import { playSound } from "@/utils/playSound"; // Import the playSound function
+import { Menu, X } from "lucide-react"; // Import icons for the menu
 
 const Index = () => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
@@ -18,6 +19,7 @@ const Index = () => {
   const [sentiment, setSentiment] = useState<"Extreme Fear" | "Fear" | "Neutral" | "Greed" | "Extreme Greed">("Neutral");
   const { btcPrice } = useBinanceWebSocket();
   const { toast } = useToast();
+  const [menuOpen, setMenuOpen] = useState(false); // State to manage menu visibility
 
   // State for DCA recommendation
   const [shouldDCA, setShouldDCA] = useState<boolean>(false);
@@ -240,7 +242,12 @@ const Index = () => {
           <h1 className="text-3xl font-bold font-mono bg-clip-text text-white bg-transparent">
             BTC DCA Dashboard
           </h1>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 md:hidden">
+            <button onClick={() => setMenuOpen(!menuOpen)} className="text-white">
+              {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+          <div className={`flex-col md:flex-row md:flex items-center gap-2 ${menuOpen ? 'flex' : 'hidden'} md:flex`}>
             <span className="text-sm text-gray-400">Notifications</span>
             <Switch
               checked={notificationsEnabled}
