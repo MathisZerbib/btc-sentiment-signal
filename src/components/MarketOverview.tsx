@@ -9,14 +9,20 @@ interface NewsItem {
   published_at: string;
 }
 
+interface EventItem {
+  title: string;
+  description: string;
+  start_date: string;
+}
+
 interface MarketOverviewProps {
   onOverviewGenerated: (overview: string) => void;
 }
 
 export const MarketOverview = ({ onOverviewGenerated }: MarketOverviewProps) => {
-  const [formattedNews, setFormattedNews] = useState<string>("");
+  const [formattedOverview, setFormattedOverview] = useState<string>("");
 
-  const { data: news, isLoading } = useQuery({
+  const { data: news, isLoading: isNewsLoading } = useQuery({
     queryKey: ["bitcoinNews"],
     queryFn: async () => {
       const response = await axios.get(
@@ -27,8 +33,19 @@ export const MarketOverview = ({ onOverviewGenerated }: MarketOverviewProps) => 
     refetchInterval: 300000, // Refresh every 5 minutes
   });
 
+  const { data: events, isLoading: isEventsLoading } = useQuery({
+    queryKey: ["bitcoinEvents"],
+    queryFn: async () => {
+      const response = await axios.get(
+        "https://api.coingecko.com/api/v3/events"
+      );
+      return response.data.data as EventItem[];
+    },
+    refetchInterval: 300000,
+  });
+
   useEffect(() => {
-    if (news && news.length > 0) {
+    if (news && events) {
       const latestNews = news
         .slice(0, 3)
         .map(item => {
@@ -37,19 +54,28 @@ export const MarketOverview = ({ onOverviewGenerated }: MarketOverviewProps) => 
         })
         .join("\n");
 
-      const overview = `Latest Bitcoin Updates:\n${latestNews}`;
-      setFormattedNews(overview);
+      const upcomingEvents = events
+        .filter(event => new Date(event.start_date) >= new Date())
+        .slice(0, 3)
+        .map(event => {
+          const date = new Date(event.start_date).toLocaleDateString();
+          return `${date}: ${event.title}`;
+        })
+        .join("\n");
+
+      const overview = `Latest Bitcoin News:\n${latestNews}\n\nUpcoming Events:\n${upcomingEvents}`;
+      setFormattedOverview(overview);
       onOverviewGenerated(overview);
     }
-  }, [news, onOverviewGenerated]);
+  }, [news, events, onOverviewGenerated]);
 
-  if (isLoading) {
+  if (isNewsLoading || isEventsLoading) {
     return <Skeleton className="h-20 w-full" />;
   }
 
   return (
     <div className="space-y-4">
-      {formattedNews.split('\n').map((line, index) => (
+      {formattedOverview.split('\n').map((line, index) => (
         <p key={index} className="text-sm text-gray-400">
           {line}
         </p>
