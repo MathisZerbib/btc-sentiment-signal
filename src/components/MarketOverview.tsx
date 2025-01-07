@@ -37,18 +37,18 @@ export const MarketOverview = ({ onOverviewGenerated }: MarketOverviewProps) => 
             {
               role: "system",
               content:
-                "You are a professional crypto analyst. Provide a concise market overview for Bitcoin, including recent developments and upcoming significant events. Focus on key market drivers and potential impacts.",
+                "You are a professional crypto analyst focused on Bitcoin. Provide a comprehensive yet concise market overview that includes: 1) Key recent developments in the last 24-48 hours, 2) Significant upcoming events that could impact Bitcoin's price, 3) Important regulatory updates if any. Focus on factual information and potential market impacts.",
             },
             {
               role: "user",
               content:
-                "Generate a brief market overview for Bitcoin, including recent news and upcoming events that could impact its price.",
+                "Generate a detailed market overview for Bitcoin that covers recent developments, upcoming events, and their potential impact on price. Include specific dates for upcoming events where applicable.",
             },
           ],
           temperature: 0.2,
           max_tokens: 500,
           search_domain_filter: ["perplexity.ai"],
-          search_recency_filter: "month",
+          search_recency_filter: "day",
         }),
       });
 
