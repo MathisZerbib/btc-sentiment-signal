@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { BTCPrice } from "@/components/BTCPrice";
 import { MarketSentiment } from "@/components/MarketSentiment";
 import { DCARecommendation } from "@/components/DCARecommendation";
@@ -117,22 +117,8 @@ const Index = () => {
     }
   }, [btcPrice]);
 
-  // Handle enabling/disabling notifications
-  useEffect(() => {
-    if (notificationsEnabled) {
-      toast({
-        title: "Notifications Enabled",
-        description: "You will receive daily DCA recommendations and price alerts.",
-        duration: 5000, // Auto-close after 5 seconds
-      });
-
-      // Schedule daily DCA notifications
-      scheduleDCANotifications();
-    }
-  }, [notificationsEnabled, toast]);
-
-  // Function to schedule daily DCA notifications
-  const scheduleDCANotifications = () => {
+  // Memoize the scheduleDCANotifications function
+  const scheduleDCANotifications = useCallback(() => {
     // Calculate the time until the next 9:00 AM
     const now = new Date();
     const nextNotificationTime = new Date(
@@ -164,7 +150,21 @@ const Index = () => {
         scheduleDCANotifications();
       }
     }, timeUntilNotification);
-  };
+  }, [notificationsEnabled, dcaReason, toast]);
+
+  // Handle enabling/disabling notifications
+  useEffect(() => {
+    if (notificationsEnabled) {
+      toast({
+        title: "Notifications Enabled",
+        description: "You will receive daily DCA recommendations and price alerts.",
+        duration: 5000, // Auto-close after 5 seconds
+      });
+
+      // Schedule daily DCA notifications
+      scheduleDCANotifications();
+    }
+  }, [notificationsEnabled, toast, scheduleDCANotifications]);
 
   // Check for price alerts
   useEffect(() => {
@@ -269,6 +269,9 @@ const Index = () => {
 
         <div className="text-center text-sm text-gray-500">
           Data updates every minute. Last updated: {new Date().toLocaleTimeString()}
+        </div>
+        <div className="text-center text-sm text-gray-500">
+          DYOR (Do Your Own Research). This is not financial advice; this website is for educational purposes only.
         </div>
         <footer className="text-center text-sm text-gray-500 mt-8">
           Made by Mathis Zerbib © 2025
