@@ -88,19 +88,19 @@ const Index = () => {
 
     if (indexValue <= 25) {
       shouldDCA = true;
-      reason = "It's a good time to buy more BTC as the market sentiment is fearful.";
+      reason = "Good time to buy; market is fearful.";
     } else if (indexValue <= 45) {
       shouldDCA = true;
-      reason = "It's a good time to buy more BTC as the market sentiment is slightly fearful.";
+      reason = "Buy more; market is slightly fearful.";
     } else if (indexValue <= 55) {
       shouldDCA = false;
-      reason = "The market sentiment is neutral. Stick to your regular DCA strategy.";
+      reason = "Market is neutral. Stick to your strategy.";
     } else if (indexValue <= 75) {
       shouldDCA = false;
-      reason = "Consider holding or reducing your BTC purchases as the market sentiment is greedy.";
+      reason = "Hold or reduce buying; market is greedy.";
     } else {
       shouldDCA = false;
-      reason = "Consider holding or reducing your BTC purchases as the market sentiment is extremely greedy.";
+      reason = "Hold or reduce buying; market is extremely greedy.";
     }
 
     setShouldDCA(shouldDCA);

@@ -11,10 +11,12 @@ export const DCARecommendation = ({ shouldDCA, reason }: DCARecommendationProps)
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="text-xl font-mono">DCA Recommendation</CardTitle>
+        <CardTitle className="text-xl font-mono text-center">DCA Recommendation</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
+        <p className="text-sm text-muted-foreground text-center">{reason || "No recommendation available."}</p>  
+
           <div className="flex items-center justify-center">
             {shouldDCA ? (
               <Badge className="bg-success text-white flex items-center gap-2">
@@ -28,7 +30,6 @@ export const DCARecommendation = ({ shouldDCA, reason }: DCARecommendationProps)
               </Badge>
             )}
           </div>
-          <p className="text-sm text-muted-foreground text-center">{reason || "No recommendation available."}</p>  
         </div>
       </CardContent>
     </Card>

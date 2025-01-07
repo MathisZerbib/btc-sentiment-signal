@@ -25,12 +25,14 @@ export const MarketSentiment = ({ fearGreedIndex, sentiment }: MarketSentimentPr
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle className="text-xl font-mono">Market Sentiment</CardTitle>
+        <CardTitle className="text-xl font-mono text-center">Market Sentiment</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <div className="text-4xl font-mono">{fearGreedIndex}</div>
-          <Badge className={`${getSentimentColor()} text-white`}>{sentiment}</Badge>
+          <div className="text-4xl font-mono text-center">{fearGreedIndex}</div>
+          <Badge className={`${getSentimentColor()} text-white flex justify-center w-1/2 mx-auto`}>
+            {sentiment}
+          </Badge>  
         </div>
       </CardContent>
     </Card>
