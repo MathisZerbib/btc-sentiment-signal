@@ -5,6 +5,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { TimeframeAnalysis } from "./analysis/TimeframeAnalysis";
 import { TrendAnalysis } from "./analysis/TrendAnalysis";
 import { PriceLevels } from "./analysis/PriceLevels";
+import { MarketOverview } from "./MarketOverview";
+import { useState } from "react";
 
 interface MarketData {
   price_change_percentage_1h_in_currency: { usd: number };
@@ -21,7 +23,6 @@ interface BTCData {
   market_data: MarketData;
   sentiment_votes_up_percentage: number;
   sentiment_votes_down_percentage: number;
-  description: { en: string };
 }
 
 const fetchBTCInsights = async () => {
@@ -32,7 +33,7 @@ const fetchBTCInsights = async () => {
 };
 
 const formatPercentage = (value: number | undefined) => {
-  if (typeof value !== 'number' || isNaN(value)) return '0.00';
+  if (typeof value !== "number" || isNaN(value)) return "0.00";
   return value.toFixed(2);
 };
 
@@ -42,6 +43,8 @@ export const BTCInsights = () => {
     queryFn: fetchBTCInsights,
     refetchInterval: 300000, // Refresh every 5 minutes
   });
+
+  const [marketOverview, setMarketOverview] = useState<string>("");
 
   if (isLoading) {
     return (
@@ -102,9 +105,12 @@ export const BTCInsights = () => {
         
         <div className="bg-gray-800/50 p-4 rounded-lg backdrop-blur-sm">
           <h3 className="text-lg font-mono text-gray-300 mb-2">Market Overview</h3>
-          <p className="text-sm text-gray-400 line-clamp-4">
-            {data?.description?.en || "No market overview available at the moment."}
-          </p>
+          <MarketOverview onOverviewGenerated={setMarketOverview} />
+          {marketOverview && (
+            <p className="text-sm text-gray-400 mt-4">
+              {marketOverview}
+            </p>
+          )}
         </div>
       </CardContent>
     </Card>
