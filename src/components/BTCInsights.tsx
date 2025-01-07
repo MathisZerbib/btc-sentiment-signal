@@ -5,10 +5,11 @@ import { TimeframeAnalysis } from "./analysis/TimeframeAnalysis";
 import { TrendAnalysis } from "./analysis/TrendAnalysis";
 import { PriceLevels } from "./analysis/PriceLevels";
 import { MarketOverview } from "./MarketOverview";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
 import { fetchBTCInsights } from "@/services/btcService";
-import { useBinanceWebSocket } from "@/hooks/useBinanceWebSocket"; // Import the WebSocket hook
+import { useBinanceWebSocket } from "@/hooks/useBinanceWebSocket";
+import axios from "axios";
 
 interface MarketData {
   price_change_percentage_1h_in_currency: { usd: number };
@@ -40,25 +41,60 @@ export const BTCInsights = () => {
 
   const { btcPrice } = useBinanceWebSocket(); // Use the WebSocket hook
   const [marketOverview, setMarketOverview] = useState<string>("");
+  const [fearGreedIndex, setFearGreedIndex] = useState<number>(0);
+  const [dcaRecommendation, setDcaRecommendation] = useState<{ shouldDCA: boolean; reason: string }>({
+    shouldDCA: false,
+    reason: "Insufficient data",
+  });
 
-  const getDCARecommendation = () => {
-    if (!data) return { shouldDCA: false, reason: "Insufficient data" };
+  // Fetch Fear & Greed Index data from the API
+  useEffect(() => {
+    const fetchFearGreedIndex = async () => {
+      try {
+        const response = await axios.get("https://api.alternative.me/fng/?limit=1");
+        const indexData = response.data.data[0];
+        const indexValue = parseInt(indexData.value, 10);
+        setFearGreedIndex(indexValue);
 
-    const bullishSentiment = data.sentiment_votes_up_percentage > 60;
-    const recentPriceChange = data.market_data.price_change_percentage_24h_in_currency.usd;
-    const weeklyPriceChange = data.market_data.price_change_percentage_7d_in_currency.usd;
+        // Generate DCA recommendation based on the Fear & Greed Index
+        generateDCARecommendation(indexValue);
+      } catch (error) {
+        console.error("Failed to fetch Fear & Greed Index:", error);
+        setDcaRecommendation({
+          shouldDCA: false,
+          reason: "Failed to fetch market sentiment data.",
+        });
+      }
+    };
 
-    if (bullishSentiment && recentPriceChange > -5 && weeklyPriceChange < 10) {
-      return {
-        shouldDCA: true,
-        reason: "Market sentiment is bullish with stable price action, suggesting a good entry point.",
-      };
+    fetchFearGreedIndex();
+    const interval = setInterval(fetchFearGreedIndex, 60000); // Fetch every minute
+    return () => clearInterval(interval);
+  }, []);
+
+  // Function to generate DCA recommendation based on Fear & Greed Index
+  const generateDCARecommendation = (indexValue: number) => {
+    let shouldDCA = false;
+    let reason = "";
+
+    if (indexValue <= 25) {
+      shouldDCA = true;
+      reason = "It's a good time to buy more BTC as the market sentiment is fearful.";
+    } else if (indexValue <= 45) {
+      shouldDCA = true;
+      reason = "It's a good time to buy more BTC as the market sentiment is slightly fearful.";
+    } else if (indexValue <= 55) {
+      shouldDCA = false;
+      reason = "The market sentiment is neutral. Stick to your regular DCA strategy.";
+    } else if (indexValue <= 75) {
+      shouldDCA = false;
+      reason = "Consider holding or reducing your BTC purchases as the market sentiment is greedy.";
+    } else {
+      shouldDCA = false;
+      reason = "Consider holding or reducing your BTC purchases as the market sentiment is extremely greedy.";
     }
 
-    return {
-      shouldDCA: false,
-      reason: "Current market conditions suggest waiting for a better entry point.",
-    };
+    setDcaRecommendation({ shouldDCA, reason });
   };
 
   if (isLoading) {
@@ -81,13 +117,9 @@ export const BTCInsights = () => {
     { label: "30D", value: data?.market_data.price_change_percentage_30d_in_currency.usd },
   ];
 
-  const dcaRecommendation = getDCARecommendation();
-
   return (
     <Card className="w-full bg-gradient-to-br from-gray-900 to-gray-800 border-none relative overflow-hidden
-                    shadow-[20px_20px_60px_#1a1a1a,-20px_-20px_60px_#262626]
-                    hover:shadow-[inset_-12px_-12px_24px_#1a1a1a,inset_12px_12px_24px_#262626]
-                    transition-all duration-300">
+                    ">
       <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-blue-500/10 pointer-events-none" />
       <CardHeader className="relative z-10">
         <CardTitle className="text-xl font-mono text-gray-300">Advanced BTC Analysis</CardTitle>

@@ -270,6 +270,9 @@ const Index = () => {
         <div className="text-center text-sm text-gray-500">
           Data updates every minute. Last updated: {new Date().toLocaleTimeString()}
         </div>
+        <footer className="text-center text-sm text-gray-500 mt-8">
+          Made by Mathis Zerbib © 2025
+        </footer>
       </div>
     </div>
   );
