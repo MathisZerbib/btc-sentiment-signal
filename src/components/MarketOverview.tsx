@@ -228,7 +228,7 @@ export const MarketOverview = ({ onOverviewGenerated }: MarketOverviewProps) => 
   }
 
   return (
-    <div className="space-y-8 p-6 min-h-screen">
+    <div className="space-y-8 p-6">
       {/* Enable/Disable LLM Button */}
       <div className="w-full max-w-6xl mx-auto">
         {/* <button
@@ -258,8 +258,8 @@ export const MarketOverview = ({ onOverviewGenerated }: MarketOverviewProps) => 
         <Slider {...carouselSettings}>
           {filteredNews.map((article, index) => (
             <div key={index} className="p-2">
-              <div className="bg-white rounded-2xl shadow-neumorphism p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-neumorphism-hover">
-                <div className="relative h-56 overflow-hidden rounded-xl">
+              <div className="bg-white rounded-2xl shadow-lg p-4 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                <div className="relative h-40 overflow-hidden rounded-xl">
                   <img
                     src={article.urlToImage || "https://via.placeholder.com/150"}
                     alt={article.title}
@@ -269,18 +269,18 @@ export const MarketOverview = ({ onOverviewGenerated }: MarketOverviewProps) => 
                     }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                  <h3 className="absolute bottom-4 left-4 text-lg font-semibold text-white line-clamp-2">
+                  <h3 className="absolute bottom-4 left-4 text-md font-semibold text-white line-clamp-2">
                     {article.title}
                   </h3>
                 </div>
-                <p className="mt-4 text-sm text-gray-600 line-clamp-4">
+                <p className="mt-4 text-sm text-gray-600 line-clamp-3">
                   {article.description || "No description available."}
                 </p>
                 <a
                   href={article.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-4 inline-block px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-900 transition-all duration-300"
+                  className="mt-4 inline-block px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-900 transition-all duration-300 text-sm"
                 >
                   Read more
                 </a>

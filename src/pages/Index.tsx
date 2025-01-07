@@ -187,7 +187,7 @@ const Index = () => {
           duration: 5000, // Auto-close after 5 seconds
         });
         // Play direction-specific sound
-        playSound(direction);
+        playSound('public/sounds/'+direction+'.mp3');
         // Remove the triggered alert
         setPriceAlerts((prevAlerts) => prevAlerts.filter((price) => price !== alertPrice));
       }
@@ -196,6 +196,11 @@ const Index = () => {
 
   // Add a new price alert
   const handleAddAlert = (alertPrice: number) => {
+    // Enable notifications if they are not already enabled
+    if (!notificationsEnabled) {
+      setNotificationsEnabled(true);
+    }
+
     setPriceAlerts((prevAlerts) => [...prevAlerts, alertPrice]);
     toast({
       title: "Alert Added",
