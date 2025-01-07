@@ -1,7 +1,6 @@
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowDown, ArrowUp } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { fetchBTCData } from "@/services/btcService";
 
 const formatPercentage = (value: number): string => {
   if (typeof value !== 'number' || isNaN(value)) return '0.00';
@@ -9,11 +8,26 @@ const formatPercentage = (value: number): string => {
 };
 
 export const BTCPrice = () => {
-  const { data, isLoading } = useQuery({
-    queryKey: ["btcPrice"],
-    queryFn: fetchBTCData,
-    refetchInterval: 900000, // Refresh every 15 minutes
-  });
+  const [price, setPrice] = useState<number>(0);
+  const [change24h, setChange24h] = useState<number>(0);
+  const [change7d, setChange7d] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const ws = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@ticker');
+
+    ws.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      setPrice(parseFloat(data.c));
+      setChange24h(parseFloat(data.P));
+      // For simplicity, we are not calculating the 7d change here. You might need to fetch historical data for that.
+      setIsLoading(false);
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, []);
 
   if (isLoading) {
     return (
@@ -24,10 +38,6 @@ export const BTCPrice = () => {
       </Card>
     );
   }
-
-  const price = data?.currentPrice || 0;
-  const change24h = data?.priceChange24h || 0;
-  const change7d = data?.priceChange7d || 0;
 
   return (
     <Card className="w-full bg-gradient-to-br from-gray-900 to-gray-800 border-none relative overflow-hidden
