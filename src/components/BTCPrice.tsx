@@ -9,9 +9,13 @@ const formatPercentage = (value: number): string => {
   return Math.abs(value).toFixed(2);
 };
 
-export const BTCPrice = () => {
-  const [price, setPrice] = useState<number>(0);
-  const [previousPrice, setPreviousPrice] = useState<number>(0); // Track previous price
+interface BTCPriceProps {
+  btcPrice: number;
+}
+
+export const BTCPrice = ({ btcPrice }: BTCPriceProps) => {
+  const [price, setPrice] = useState<number>(btcPrice);
+  const [previousPrice, setPreviousPrice] = useState<number>(btcPrice); // Track previous price
   const [change24h, setChange24h] = useState<number>(0);
   const [change7d, setChange7d] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);

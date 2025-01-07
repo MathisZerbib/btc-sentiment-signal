@@ -128,9 +128,8 @@ export const BTCInsights = () => {
         <TimeframeAnalysis timeframes={timeframes} />
 
         <TrendAnalysis
-          change1h={data?.market_data.price_change_percentage_1h_in_currency.usd || 0}
           change24h={data?.market_data.price_change_percentage_24h_in_currency.usd || 0}
-          change7d={data?.market_data.price_change_percentage_7d_in_currency.usd || 0}
+          volume24h={0} // Placeholder for volume data
         />
 
         <PriceLevels
