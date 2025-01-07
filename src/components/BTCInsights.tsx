@@ -8,13 +8,13 @@ import { PriceLevels } from "./analysis/PriceLevels";
 import { MarketOverview } from "./MarketOverview";
 import { useState } from "react";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
-
+import { fetchBTCInsights } from "@/services/btcService";
 interface MarketData {
   price_change_percentage_1h_in_currency: { usd: number };
   price_change_percentage_24h_in_currency: { usd: number };
   price_change_percentage_7d_in_currency: { usd: number };
   price_change_percentage_30d_in_currency: { usd: number };
-  price_change_percentage_1y_in_currency: { usd: number };
+  // price_change_percentage_1y_in_currency: { usd: number };
   current_price: { usd: number };
   high_24h: { usd: number };
   low_24h: { usd: number };
@@ -26,12 +26,6 @@ interface BTCData {
   sentiment_votes_down_percentage: number;
 }
 
-const fetchBTCInsights = async () => {
-  const response = await axios.get(
-    "https://api.coingecko.com/api/v3/coins/bitcoin?localization=false&tickers=false&community_data=false&developer_data=false&sparkline=false"
-  );
-  return response.data as BTCData;
-};
 
 const formatPercentage = (value: number | undefined) => {
   if (typeof value !== "number" || isNaN(value)) return "0.00";
@@ -85,7 +79,7 @@ export const BTCInsights = () => {
     { label: "24H", value: data?.market_data.price_change_percentage_24h_in_currency.usd },
     { label: "7D", value: data?.market_data.price_change_percentage_7d_in_currency.usd },
     { label: "30D", value: data?.market_data.price_change_percentage_30d_in_currency.usd },
-    { label: "1Y", value: data?.market_data.price_change_percentage_1y_in_currency.usd },
+    // { label: "1Y", value: data?.market_data.price_change_percentage_1y_in_currency.usd },
   ];
 
   const dcaRecommendation = getDCARecommendation();
@@ -143,7 +137,7 @@ export const BTCInsights = () => {
         </div>
         
         <div className="bg-gray-800/50 p-4 rounded-lg backdrop-blur-sm">
-          <h3 className="text-lg font-mono text-gray-300 mb-2">Latest Market Updates & Events</h3>
+          <h3 className="text-lg font-mono text-gray-300 mb-8">Latest Market Updates & Events</h3>
           <MarketOverview onOverviewGenerated={setMarketOverview} />
           {marketOverview && (
             <p className="text-sm text-gray-400 mt-4">

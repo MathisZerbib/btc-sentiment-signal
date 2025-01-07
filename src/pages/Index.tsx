@@ -34,7 +34,7 @@ const Index = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-8">
       <div className="max-w-6xl mx-auto space-y-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold font-mono bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">
+          <h1 className="text-3xl font-bold font-mono bg-clip-text text-white bg-transparent">
             BTC DCA Dashboard
           </h1>
           <div className="flex items-center gap-2">

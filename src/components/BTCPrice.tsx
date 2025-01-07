@@ -1,24 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowDown, ArrowUp } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-
-interface BTCPriceProps {
-  currentPrice: number;
-  priceChange24h: number;
-  priceChange7d: number;
-}
-
-const fetchBTCData = async () => {
-  const response = await axios.get(
-    "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd&include_24hr_change=true&include_7d_change=true"
-  );
-  return {
-    currentPrice: response.data.bitcoin.usd || 0,
-    priceChange24h: response.data.bitcoin.usd_24h_change || 0,
-    priceChange7d: response.data.bitcoin.usd_7d_change || 0,
-  };
-};
+import { fetchBTCData } from "@/services/btcService";
 
 const formatPercentage = (value: number): string => {
   if (typeof value !== 'number' || isNaN(value)) return '0.00';
@@ -29,7 +12,7 @@ export const BTCPrice = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["btcPrice"],
     queryFn: fetchBTCData,
-    refetchInterval: 60000, // Refresh every minute
+    refetchInterval: 900000, // Refresh every 15 minutes
   });
 
   if (isLoading) {
