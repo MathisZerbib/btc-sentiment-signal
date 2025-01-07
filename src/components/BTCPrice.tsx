@@ -39,12 +39,14 @@ export const BTCPrice = () => {
     );
   }
 
+  const auraClass = change24h >= 5 ? "from-green-500/10 to-green-500/10" : change24h <= -5 ? "from-red-500/10 to-red-500/10" : "from-purple-500/10 to-blue-500/10";
+
   return (
-    <Card className="w-full bg-gradient-to-br from-gray-900 to-gray-800 border-none relative overflow-hidden
+    <Card className={`w-full bg-gradient-to-br from-gray-900 to-gray-800 border-none relative overflow-hidden
                     shadow-[20px_20px_60px_#1a1a1a,-20px_-20px_60px_#262626]
                     hover:shadow-[inset_-12px_-12px_24px_#1a1a1a,inset_12px_12px_24px_#262626]
-                    transition-all duration-300">
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-blue-500/10 pointer-events-none" />
+                    transition-all duration-300`}>
+      <div className={`absolute inset-0 bg-gradient-to-br ${auraClass} pointer-events-none`} />
       <CardHeader className="relative z-10">
         <CardTitle className="text-xl font-mono text-gray-300">Bitcoin Price</CardTitle>
       </CardHeader>

@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TimeframeAnalysis } from "./analysis/TimeframeAnalysis";
 import { TrendAnalysis } from "./analysis/TrendAnalysis";
@@ -9,12 +8,13 @@ import { MarketOverview } from "./MarketOverview";
 import { useState } from "react";
 import { ThumbsUp, ThumbsDown } from "lucide-react";
 import { fetchBTCInsights } from "@/services/btcService";
+import { useBinanceWebSocket } from "@/hooks/useBinanceWebSocket"; // Import the WebSocket hook
+
 interface MarketData {
   price_change_percentage_1h_in_currency: { usd: number };
   price_change_percentage_24h_in_currency: { usd: number };
   price_change_percentage_7d_in_currency: { usd: number };
   price_change_percentage_30d_in_currency: { usd: number };
-  // price_change_percentage_1y_in_currency: { usd: number };
   current_price: { usd: number };
   high_24h: { usd: number };
   low_24h: { usd: number };
@@ -25,7 +25,6 @@ interface BTCData {
   sentiment_votes_up_percentage: number;
   sentiment_votes_down_percentage: number;
 }
-
 
 const formatPercentage = (value: number | undefined) => {
   if (typeof value !== "number" || isNaN(value)) return "0.00";
@@ -39,25 +38,26 @@ export const BTCInsights = () => {
     refetchInterval: 300000, // Refresh every 5 minutes
   });
 
+  const { btcPrice } = useBinanceWebSocket(); // Use the WebSocket hook
   const [marketOverview, setMarketOverview] = useState<string>("");
 
   const getDCARecommendation = () => {
     if (!data) return { shouldDCA: false, reason: "Insufficient data" };
-    
+
     const bullishSentiment = data.sentiment_votes_up_percentage > 60;
     const recentPriceChange = data.market_data.price_change_percentage_24h_in_currency.usd;
     const weeklyPriceChange = data.market_data.price_change_percentage_7d_in_currency.usd;
-    
+
     if (bullishSentiment && recentPriceChange > -5 && weeklyPriceChange < 10) {
       return {
         shouldDCA: true,
-        reason: "Market sentiment is bullish with stable price action, suggesting a good entry point."
+        reason: "Market sentiment is bullish with stable price action, suggesting a good entry point.",
       };
     }
-    
+
     return {
       shouldDCA: false,
-      reason: "Current market conditions suggest waiting for a better entry point."
+      reason: "Current market conditions suggest waiting for a better entry point.",
     };
   };
 
@@ -79,7 +79,6 @@ export const BTCInsights = () => {
     { label: "24H", value: data?.market_data.price_change_percentage_24h_in_currency.usd },
     { label: "7D", value: data?.market_data.price_change_percentage_7d_in_currency.usd },
     { label: "30D", value: data?.market_data.price_change_percentage_30d_in_currency.usd },
-    // { label: "1Y", value: data?.market_data.price_change_percentage_1y_in_currency.usd },
   ];
 
   const dcaRecommendation = getDCARecommendation();
@@ -95,19 +94,19 @@ export const BTCInsights = () => {
       </CardHeader>
       <CardContent className="relative z-10 space-y-6">
         <TimeframeAnalysis timeframes={timeframes} />
-        
-        <TrendAnalysis 
+
+        <TrendAnalysis
           change1h={data?.market_data.price_change_percentage_1h_in_currency.usd || 0}
           change24h={data?.market_data.price_change_percentage_24h_in_currency.usd || 0}
           change7d={data?.market_data.price_change_percentage_7d_in_currency.usd || 0}
         />
 
-        <PriceLevels 
-          currentPrice={data?.market_data.current_price.usd || 0}
+        <PriceLevels
+          currentPrice={btcPrice || data?.market_data.current_price.usd || 0} // Use WebSocket price or fallback to API
           high24h={data?.market_data.high_24h.usd || 0}
           low24h={data?.market_data.low_24h.usd || 0}
         />
-        
+
         <div className="bg-gray-800/50 p-4 rounded-lg backdrop-blur-sm">
           <h3 className="text-lg font-mono text-gray-300 mb-4">Market Sentiment & DCA Strategy</h3>
           <div className="space-y-4">
@@ -135,7 +134,7 @@ export const BTCInsights = () => {
             </div>
           </div>
         </div>
-        
+
         <div className="bg-gray-800/50 p-4 rounded-lg backdrop-blur-sm">
           <h3 className="text-lg font-mono text-gray-300 mb-8">Latest Market Updates & Events</h3>
           <MarketOverview onOverviewGenerated={setMarketOverview} />
