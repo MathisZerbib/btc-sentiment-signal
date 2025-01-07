@@ -59,7 +59,7 @@ export const MarketOverview = ({ onOverviewGenerated }: MarketOverviewProps) => 
   const [error, setError] = useState<string | null>(null);
   const [filteredNews, setFilteredNews] = useState<NewsItem[]>([]);
   const [engine, setEngine] = useState<webllm.MLCEngine | null>(null);
-  const [loadingProgress, setLoadingProgress] = useState<string>("Initializing model...");
+  const [loadingProgress, setLoadingProgress] = useState<string>("");
   const [progressPercentage, setProgressPercentage] = useState<number>(0);
   const [isProcessing, setIsProcessing] = useState<boolean>(false); // Track AI processing state
   const [isLLMEnabled, setIsLLMEnabled] = useState<boolean>(false); // Track if LLM is enabled
