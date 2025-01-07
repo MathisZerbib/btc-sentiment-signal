@@ -28,7 +28,7 @@ export const DCARecommendation = ({ shouldDCA, reason }: DCARecommendationProps)
               </Badge>
             )}
           </div>
-          <p className="text-sm text-muted-foreground text-center">{reason}</p>
+          <p className="text-sm text-muted-foreground text-center">{reason || "No recommendation available."}</p>  
         </div>
       </CardContent>
     </Card>
